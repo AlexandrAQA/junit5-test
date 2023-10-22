@@ -6,13 +6,17 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserServiceTest {
 
-    private UserService userService;
+    private static final User MARK = User.of(1, "Mark", "111212121");
+    private static final User MAX = User.of(2, "Max", "2221212121");
+    private UserService userService = new UserService();
 
     @BeforeAll
     void init(){
@@ -21,7 +25,6 @@ public class UserServiceTest {
 
     @Test
     void userEmptyIfNoUserAdded(){
-        userService = new UserService();
         var users =  userService.getAll();
         assertTrue(users.isEmpty());
         System.out.println("Success 1 " + this);
@@ -29,13 +32,25 @@ public class UserServiceTest {
 
     @Test
     void userSizeIfUserAdded(){
-        userService = new UserService();
-        userService.add(new User());
-        userService.add(new User());
-
+        userService.add(MARK);
+        userService.add(MAX);
         var userServiceAll = userService.getAll();
         assertEquals(2, userServiceAll.size());
         System.out.println("Success 2 " + this);
+    }
+
+    @Test
+    void loginSuccessIfUserExists(){
+        userService.add(MARK);
+        Optional<User> userOptional =userService.login(MARK.getUsername(), MARK.getPassword());
+        assertTrue(userOptional.isPresent());
+    }
+
+    @Test
+    void loginFailedIfUserIsNotCorrect(){
+        userService.add(MAX);
+        var maybeUser = userService.login(MAX.getUsername(), "ssss");
+        assertTrue(maybeUser.isEmpty());
     }
 
     @AfterAll
