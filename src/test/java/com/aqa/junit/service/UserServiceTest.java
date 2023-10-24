@@ -1,10 +1,7 @@
 package com.aqa.junit.service;
 
 import com.aqa.junit.dto.User;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 
 import java.util.Optional;
 
@@ -35,21 +32,31 @@ public class UserServiceTest {
         userService.add(MARK);
         userService.add(MAX);
         var userServiceAll = userService.getAll();
-        assertEquals(2, userServiceAll.size());
+        assertEquals(4, userServiceAll.size());
         System.out.println("Success 2 " + this);
     }
 
     @Test
     void loginSuccessIfUserExists(){
         userService.add(MARK);
-        Optional<User> userOptional =userService.login(MARK.getUsername(), MARK.getPassword());
+        Optional<User> userOptional = userService.login(MARK.getUsername(), MARK.getPassword());
         assertTrue(userOptional.isPresent());
+        Assertions.assertEquals(userOptional, MARK);
+
     }
 
     @Test
     void loginFailedIfUserIsNotCorrect(){
         userService.add(MAX);
         var maybeUser = userService.login(MAX.getUsername(), "ssss");
+        assertTrue(maybeUser.isEmpty());
+
+    }
+
+    @Test
+    void loginFailedIfUserDoesNotExist(){
+        userService.add(MAX);
+        var maybeUser = userService.login("invalidUser", MARK.getPassword());
         assertTrue(maybeUser.isEmpty());
     }
 
