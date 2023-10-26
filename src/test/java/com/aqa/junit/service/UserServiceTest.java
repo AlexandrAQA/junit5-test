@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserServiceTest {
@@ -58,6 +59,16 @@ public class UserServiceTest {
         userService.add(MAX);
         var maybeUser = userService.login("invalidUser", MARK.getPassword());
         assertTrue(maybeUser.isEmpty());
+    }
+
+    @Test
+    void usersSizeAssertJ(){
+        System.out.println("Assert J Test");
+        userService.add(MAX);
+        userService.add(MARK);
+        var usersAssertJ = userService.getAll();
+        assertThat(usersAssertJ).hasSize(2);
+
     }
 
     @AfterAll
