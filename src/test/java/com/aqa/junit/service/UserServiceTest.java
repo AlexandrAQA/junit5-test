@@ -39,7 +39,7 @@ class UserServiceTest {
         var users = userService.getAll();
 
         MatcherAssert.assertThat(users, empty());
-        assertTrue(users.isEmpty(), () -> "User list should be empty");
+        assertTrue(users.isEmpty(), "User list should be empty");
 //        input -> [box == func] -> actual output
     }
 
